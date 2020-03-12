@@ -1,7 +1,7 @@
 section .data
 	lineas db "------------------------------", 10
 	leng_lineas equ $ -lineas
-	salto db "",10
+	salto db "*",10
 	leng_salto equ $ -salto
 	a db "Ingrese valor de a: "
 	leng_a equ $ -a
@@ -39,7 +39,7 @@ filas:
 	
 	mov eax, 4
 	mov ebx, 1
-	mov ecx, resultado
+	mov ecx, salto
 	mov edx, 10
 	int 80H
 	

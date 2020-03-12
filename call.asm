@@ -17,6 +17,7 @@ section .data
 
     m1 db "*"
     m2 db 10,""
+    
 
 section .bss
 
@@ -24,7 +25,7 @@ section .text
     global _start
 _start:
 
-    mov ecx , 9
+    mov ecx , 5
 
 l1:
     push ecx 

@@ -1,74 +1,86 @@
+%macro escribir 2 
+        mov eax, 4
+        mov ebx, 1
+        mov ecx, %1
+        mov edx, %2
+        int 80h
+%endmacro
+
+%macro leer 2 
+        mov eax, 3
+        mov ebx, 0
+        mov ecx, %1
+        mov edx, %2
+        int 80h
+%endmacro
+
+%macro presentar 1
+        mov eax, 4
+        mov ebx, 1
+        mov ecx, %1
+        mov edx, 1
+        int 80h
+%endmacro
+
+
 section .data
-	m1 db "Ingrese el Dividendo",10
-	l1 equ $-m1
+        msj db 10, "Dividendo:",10
+        len1 equ $ - msj
+        msj2 db 10, "Divisor:",10
+        len2 equ $ - msj2
 
-	m2 db "Ingrese el Divisor",10
-	l2 equ $-m2
+        m1 db 10,"El cociente: ",10
+        l1 equ $ - m1
 
-	resultado db "El Resultado es:",10
-	lresultado equ $-resultado
-	
-
+        m2 db 10,"El residuo: ",10
+        l2 equ $ - m2
 
 section .bss
-	d1 resb 2
-	d2 resb 2
-	division resb 2
-
-section .text 	
-	global _start
-
+        n1 resb 1
+        n2 resb 2
+        resta resb 1
+        cociente resb 1
+        residuo resb 1
+section .text
+        global _start ; establece una posición de memoria
 _start:
-	
-%macro escribir 2
-	mov eax, 4
-	mov ebx,1
-	mov ecx,%1
-	mov edx,%2
-	int 80h
-%endmacro
 
-%macro leer 2
-	mov eax, 3
-	mov ebx,2
-	mov ecx,%1
-	mov edx,%2
-	int 80h
-%endmacro
-;*******INGRESAR DIVIDENDO***********	
+      
+; ingreso del dividendo
 
-	escribir m1,l1
-	leer d1 ,2
+;*******INGRESAR Primer Numero***********	
+        escribir msj, len1 
+        leer n1, 2
+;*******INGRESAR Segundo Numero***********	
+        escribir msj2, len2
+        leer n2, 2 
 
+            mov al, [n1]
+	    mov bl, [n2]
+	    mov cx, 0
+	    sub al, '0'
+	    sub bl, '0'
 
-;*******INGRESAR DIVISOR***********	
-
-	escribir m2,l2
-	leer d2 ,2
-
-;********* PROCESO DE DIVISION *******
-
-	
-	mov al, [d1]	
-	mov bl, [d2]
-	sub al, '0'
-	sub bl, '0'
-	div bl
-	add al, '0'
-	mov [division], al
-    
-
-;*******DIVISION ***********
-
-	escribir resultado,lresultado
-	escribir division, 1
-	int 80h
-
-	mov eax, 1
-	int 80h
-
-
-
+division: 
+        sub al, bl
+	    inc cx
+	    cmp al,bl
+	    jg division
+            je division
+	    jmp mostrar
+mostrar: 
+	    add al,'0'
+	    add cx,'0'
+	    mov [cociente], cx
+	    mov [residuo], al
+        escribir m1, l1
+        presentar cociente
+        escribir m2, l2
+        presentar residuo
+        jmp salir
+salir: 
+        mov eax, 1
+        int 80h
 
 
 
